@@ -4,6 +4,9 @@ import packageJsonString from "./fixtures/packageJsonString";
 import PackageJsonError, { isPackageJsonError } from "./PackageJsonError";
 import packageJsonObject from "./fixtures/packageJsonObject";
 
+/**
+ * @author Joern Meyer <https://joern.url.lol/🧑‍💻>
+ */
 describe("PackageJsonManager", () => {
   const readFileSyncSpy = jest.spyOn(fs, "readFileSync");
 

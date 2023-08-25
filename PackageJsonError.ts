@@ -1,5 +1,10 @@
 import TPackageJsonErrorType from "./TPackageJsonErrorType";
 
+/**
+ * Typeguard
+ * @param error
+ * @returns boolean
+ */
 export function isPackageJsonError(error: any): error is PackageJsonError {
   const validTypes = [
     "PACKAGE_JSON_NOT_FOUND",
@@ -11,6 +16,9 @@ export function isPackageJsonError(error: any): error is PackageJsonError {
   );
 }
 
+/**
+ * @author Joern Meyer <https://joern.url.lol/🧑‍💻>
+ */
 export default class PackageJsonError extends Error {
   errorType: TPackageJsonErrorType;
 

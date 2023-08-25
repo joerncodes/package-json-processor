@@ -5,10 +5,21 @@ import semverValid from "semver/functions/valid";
 import TDependency from "./TDependency";
 import TScript from "./TScript";
 
+/**
+ * The PackageJsonProcessor class is used to read, manipulate, and save the `package.json` file in the current working directory.
+ *
+ * @author Joern Meyer <https://joern.url.lol/🧑‍💻>
+ */
 export default class PackageJsonProcessor {
   private psPath: string;
   private psObject: any;
 
+  /**
+   * The constructor will read the contents of package.json and throw an error if:
+   *
+   * - it can't be found
+   * - it contains invalid JSON
+   */
   constructor() {
     this.psPath = path.join(process.cwd(), "package.json");
 
@@ -34,10 +45,20 @@ export default class PackageJsonProcessor {
     }
   }
 
+  /**
+   * Return the package.json contents as a parsed object
+   * @returns any
+   */
   getPackageJsonObject(): any {
     return this.psObject;
   }
 
+  /**
+   * Set the package's version. Will throw an error if an invalid semver is provided.
+   *
+   * @param version
+   * @returns PackageJsonProcessor
+   */
   setVersion(version: string): PackageJsonProcessor {
     if (!semverValid(version)) {
       throw new PackageJsonError(
@@ -50,6 +71,10 @@ export default class PackageJsonProcessor {
     return this;
   }
 
+  /**
+   * @param dependency
+   * @returns PackageJsonProcessor
+   */
   addDependency(dependency: TDependency): PackageJsonProcessor {
     const { packageName, version } = dependency;
 
@@ -63,6 +88,10 @@ export default class PackageJsonProcessor {
     return this;
   }
 
+  /**
+   * @param dependency
+   * @returns PackageJsonProcessor
+   */
   addDevDependency(dependency: TDependency): PackageJsonProcessor {
     const { packageName, version } = dependency;
 
@@ -75,6 +104,10 @@ export default class PackageJsonProcessor {
     return this;
   }
 
+  /**
+   * @param script
+   * @returns PackageJsonProcessor
+   */
   addScript(script: TScript): PackageJsonProcessor {
     if (typeof this.psObject.scripts === "undefined") {
       this.psObject.scripts = {};
@@ -87,6 +120,9 @@ export default class PackageJsonProcessor {
     return this;
   }
 
+  /**
+   * Save the current contents of the package.json object back to the file.
+   */
   save(): void {
     fs.writeFileSync(this.psPath, JSON.stringify(this.psObject, null, 2));
   }
