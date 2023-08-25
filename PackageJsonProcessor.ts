@@ -1,6 +1,7 @@
 import * as path from "path";
 import * as fs from "fs";
 import PackageJsonError from "./PackageJsonError";
+import semverValid from "semver/functions/valid";
 
 export default class PackageJsonProcessor {
   private psPath: string;
@@ -29,5 +30,25 @@ export default class PackageJsonProcessor {
         "PACKAGE_JSON_INVALID"
       );
     }
+  }
+
+  getPackageJsonObject(): any {
+    return this.psObject;
+  }
+
+  setVersion(version: string): PackageJsonProcessor {
+    if (!semverValid(version)) {
+      throw new PackageJsonError(
+        `Invalid semver version: ${version}`,
+        "INVALID_SEMVER"
+      );
+    }
+    this.psObject.version = version;
+
+    return this;
+  }
+
+  save(): void {
+    fs.writeFileSync(this.psPath, JSON.stringify(this.psObject, null, 2));
   }
 }

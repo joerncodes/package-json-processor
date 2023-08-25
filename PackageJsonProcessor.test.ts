@@ -1,19 +1,18 @@
-import * as fs from "fs";
+import fs from "fs";
 import PackageJsonProcessor from "./PackageJsonProcessor";
-import packgeJsonString from "./fixtures/packageJsonString";
+import packageJsonString from "./fixtures/packageJsonString";
 import PackageJsonError, { isPackageJsonError } from "./PackageJsonError";
 
-jest.mock("fs");
 describe("PackageJsonManager", () => {
-  describe("finding package.json file", () => {
-    const readFileSyncSpy = jest.spyOn(fs, "readFileSync");
+  const readFileSyncSpy = jest.spyOn(fs, "readFileSync");
 
+  describe("finding package.json file", () => {
     beforeEach(() => {
       readFileSyncSpy.mockClear();
     });
 
     it("starts by reading the package.json file", () => {
-      readFileSyncSpy.mockReturnValueOnce(packgeJsonString);
+      readFileSyncSpy.mockReturnValueOnce(packageJsonString);
       new PackageJsonProcessor();
       expect(readFileSyncSpy).toHaveBeenCalledTimes(1);
     });
@@ -48,6 +47,48 @@ describe("PackageJsonManager", () => {
           "PACKAGE_JSON_INVALID"
         );
       }
+    });
+  });
+
+  describe("getter functions", () => {
+    it("can return the parsed package.json object", () => {
+      readFileSyncSpy.mockReturnValueOnce(packageJsonString);
+      const processor = new PackageJsonProcessor();
+      const packageJsonObject = processor.getPackageJsonObject();
+
+      expect(packageJsonObject.version).toBe(packageJsonObject.version);
+    });
+  });
+
+  describe("set version", () => {
+    it("will throw an error if the version is an invalid semver", () => {
+      readFileSyncSpy.mockReturnValueOnce(packageJsonString);
+      const processor = new PackageJsonProcessor();
+
+      expect.assertions(3);
+      try {
+        processor.setVersion("1.0.0.1.0");
+      } catch (error: any) {
+        expect(isPackageJsonError(error)).toBeTruthy();
+        expect((error as PackageJsonError).message).toContain("1.0.0.1.0");
+        expect((error as PackageJsonError).errorType).toBe("INVALID_SEMVER");
+      }
+    });
+  });
+
+  describe("saving package.json", () => {
+    const writeFileSyncSpy = jest.spyOn(fs, "writeFileSync");
+    it("can save the package.json object", () => {
+      readFileSyncSpy.mockReturnValueOnce(packageJsonString);
+      writeFileSyncSpy.mockImplementationOnce(() => {});
+
+      const processor = new PackageJsonProcessor();
+      processor.setVersion("1.0.1");
+      processor.save();
+
+      expect(writeFileSyncSpy).toHaveBeenCalledTimes(1);
+      const argument = writeFileSyncSpy.mock.calls[0][1];
+      expect((argument as string).indexOf("1.0.1") !== -1).toBeTruthy();
     });
   });
 });

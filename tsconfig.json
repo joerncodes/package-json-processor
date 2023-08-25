@@ -4,7 +4,8 @@
     "moduleResolution": "Node",
     "target": "ESNext",
     "strict": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "esModuleInterop": true,
   },
   "include": ["**/*.ts"],
   "exclude": []
