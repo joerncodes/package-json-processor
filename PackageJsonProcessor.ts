@@ -2,6 +2,7 @@ import * as path from "path";
 import * as fs from "fs";
 import PackageJsonError from "./PackageJsonError";
 import semverValid from "semver/functions/valid";
+import TDependency from "./TDependency";
 
 export default class PackageJsonProcessor {
   private psPath: string;
@@ -44,6 +45,30 @@ export default class PackageJsonProcessor {
       );
     }
     this.psObject.version = version;
+
+    return this;
+  }
+
+  addDependency(dependency: TDependency): PackageJsonProcessor {
+    const { packageName, version } = dependency;
+
+    if (typeof this.psObject.dependencies === "undefined") {
+      this.psObject.dependencies = {};
+    }
+
+    this.psObject.dependencies[packageName] = version;
+
+    return this;
+  }
+
+  addDevDependency(dependency: TDependency): PackageJsonProcessor {
+    const { packageName, version } = dependency;
+
+    if (typeof this.psObject.devDependencies === "undefined") {
+      this.psObject.devDependencies = {};
+    }
+
+    this.psObject.devDependencies[packageName] = version;
 
     return this;
   }

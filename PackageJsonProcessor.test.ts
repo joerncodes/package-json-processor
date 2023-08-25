@@ -91,4 +91,41 @@ describe("PackageJsonManager", () => {
       expect((argument as string).indexOf("1.0.1") !== -1).toBeTruthy();
     });
   });
+
+  describe("adding dependencies", () => {
+    it("can add dependencies", () => {
+      readFileSyncSpy.mockReturnValueOnce(packageJsonString);
+
+      const processor = new PackageJsonProcessor();
+      expect(processor.getPackageJsonObject().dependencies).not.toHaveProperty(
+        "a-test"
+      );
+
+      processor.addDependency({
+        packageName: "a-test",
+        version: "^1.0.0",
+      });
+
+      expect(processor.getPackageJsonObject().dependencies).toHaveProperty(
+        "a-test"
+      );
+    });
+    it("can add devDependencies", () => {
+      readFileSyncSpy.mockReturnValueOnce(packageJsonString);
+
+      const processor = new PackageJsonProcessor();
+      expect(
+        processor.getPackageJsonObject().devDependencies
+      ).not.toHaveProperty("a-test");
+
+      processor.addDevDependency({
+        packageName: "a-test",
+        version: "^1.0.0",
+      });
+
+      expect(processor.getPackageJsonObject().devDependencies).toHaveProperty(
+        "a-test"
+      );
+    });
+  });
 });
