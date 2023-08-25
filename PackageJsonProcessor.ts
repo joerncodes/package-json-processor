@@ -3,6 +3,7 @@ import * as fs from "fs";
 import PackageJsonError from "./PackageJsonError";
 import semverValid from "semver/functions/valid";
 import TDependency from "./TDependency";
+import TScript from "./TScript";
 
 export default class PackageJsonProcessor {
   private psPath: string;
@@ -69,6 +70,18 @@ export default class PackageJsonProcessor {
     }
 
     this.psObject.devDependencies[packageName] = version;
+
+    return this;
+  }
+
+  addScript(script: TScript): PackageJsonProcessor {
+    if (typeof this.psObject.scripts === "undefined") {
+      this.psObject.scripts = {};
+    }
+
+    const { key, command } = script;
+
+    this.psObject.scripts[key] = command;
 
     return this;
   }

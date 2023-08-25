@@ -128,4 +128,20 @@ describe("PackageJsonManager", () => {
       );
     });
   });
+
+  describe("adding scripts", () => {
+    it("can add scripts", () => {
+      readFileSyncSpy.mockReturnValueOnce(packageJsonString);
+
+      const processor = new PackageJsonProcessor();
+      expect(processor.getPackageJsonObject().scripts).not.toHaveProperty(
+        "testytest"
+      );
+
+      processor.addScript({ key: "testytest", command: "jest --watch" });
+      expect(processor.getPackageJsonObject().scripts).toHaveProperty(
+        "testytest"
+      );
+    });
+  });
 });
