@@ -54,6 +54,7 @@ export default class PackageJsonProcessor {
     const { packageName, version } = dependency;
 
     if (typeof this.psObject.dependencies === "undefined") {
+      console.log("yup");
       this.psObject.dependencies = {};
     }
 

@@ -2,6 +2,7 @@ import fs from "fs";
 import PackageJsonProcessor from "./PackageJsonProcessor";
 import packageJsonString from "./fixtures/packageJsonString";
 import PackageJsonError, { isPackageJsonError } from "./PackageJsonError";
+import packageJsonObject from "./fixtures/packageJsonObject";
 
 describe("PackageJsonManager", () => {
   const readFileSyncSpy = jest.spyOn(fs, "readFileSync");
@@ -141,6 +142,57 @@ describe("PackageJsonManager", () => {
       processor.addScript({ key: "testytest", command: "jest --watch" });
       expect(processor.getPackageJsonObject().scripts).toHaveProperty(
         "testytest"
+      );
+    });
+  });
+
+  describe("fallbacks for object keys", () => {
+    it("will create dependencies key if none is present", () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { dependencies, ...packageJsonWithoutDependencies } =
+        packageJsonObject;
+      readFileSyncSpy.mockReturnValueOnce(
+        JSON.stringify(packageJsonWithoutDependencies, null, 2)
+      );
+
+      const processor = new PackageJsonProcessor();
+      expect(typeof processor.getPackageJsonObject().dependencies).toBe(
+        "undefined"
+      );
+      processor.addDependency({ packageName: "a-test", version: "1.0.0" });
+      expect(typeof processor.getPackageJsonObject().dependencies).not.toBe(
+        "undefined"
+      );
+    });
+    it("will create devDependencies key if none is present", () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { devDependencies, ...packageJsonWithoutDevDependencies } =
+        packageJsonObject;
+      readFileSyncSpy.mockReturnValueOnce(
+        JSON.stringify(packageJsonWithoutDevDependencies, null, 2)
+      );
+
+      const processor = new PackageJsonProcessor();
+      expect(typeof processor.getPackageJsonObject().devDependencies).toBe(
+        "undefined"
+      );
+      processor.addDevDependency({ packageName: "a-test", version: "1.0.0" });
+      expect(typeof processor.getPackageJsonObject().devDependencies).not.toBe(
+        "undefined"
+      );
+    });
+    it("will create scripts key if none is present", () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { scripts, ...packageJsonWithoutScripts } = packageJsonObject;
+      readFileSyncSpy.mockReturnValueOnce(
+        JSON.stringify(packageJsonWithoutScripts, null, 2)
+      );
+
+      const processor = new PackageJsonProcessor();
+      expect(typeof processor.getPackageJsonObject().scripts).toBe("undefined");
+      processor.addScript({ key: "testytest", command: "jest --watch" });
+      expect(typeof processor.getPackageJsonObject().scripts).not.toBe(
+        "undefined"
       );
     });
   });
