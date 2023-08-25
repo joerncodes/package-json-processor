@@ -4,6 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
+    "build": "tsc",
+    "prepack": "yarn build",
+    "test": "jest",
     "prettier": "prettier --write --ignore-unknown",
     "eslint:fix": "eslint --fix"
   },
