@@ -45,6 +45,22 @@ export default class PackageJsonProcessor {
     }
   }
 
+  get name(): string {
+    return this.psObject.name;
+  }
+
+  get description(): string {
+    return this.psObject.description;
+  }
+
+  get version(): string {
+    return this.psObject.version;
+  }
+
+  get license(): string {
+    return this.psObject.license;
+  }
+
   /**
    * Return the package.json contents as a parsed object
    * @returns any

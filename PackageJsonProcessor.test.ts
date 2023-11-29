@@ -55,12 +55,21 @@ describe("PackageJsonManager", () => {
   });
 
   describe("getter functions", () => {
-    it("can return the parsed package.json object", () => {
+    beforeEach(() => {
       readFileSyncSpy.mockReturnValueOnce(packageJsonString);
+    });
+    it("can return the parsed package.json object", () => {
       const processor = new PackageJsonProcessor();
       const packageJsonObject = processor.getPackageJsonObject();
 
       expect(packageJsonObject.version).toBe(packageJsonObject.version);
+    });
+    it("provides convenience functions for name, description, license, and version", () => {
+      const processor = new PackageJsonProcessor();
+      expect(processor.name).toBe("package-json-processor");
+      expect(processor.version).toBe("1.0.0");
+      expect(processor.license).toBe("MIT");
+      expect(processor.description).toBeUndefined();
     });
   });
 
