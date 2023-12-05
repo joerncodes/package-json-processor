@@ -73,6 +73,25 @@ describe("PackageJsonManager", () => {
     });
   });
 
+  describe("setter functions", () => {
+    beforeEach(() => {
+      readFileSyncSpy.mockReturnValueOnce(packageJsonString);
+    });
+    it("provides setter functions for name, description, license, and version", () => {
+      const processor = new PackageJsonProcessor();
+      processor.name = "test";
+      processor.description = "test";
+      processor.license = "test";
+      processor.version = "1.0.1";
+
+      // Assert
+      expect(processor.name).toBe("test");
+      expect(processor.description).toBe("test");
+      expect(processor.license).toBe("test");
+      expect(processor.version).toBe("1.0.1");
+    });
+  });
+
   describe("set version", () => {
     it("will throw an error if the version is an invalid semver", () => {
       readFileSyncSpy.mockReturnValueOnce(packageJsonString);

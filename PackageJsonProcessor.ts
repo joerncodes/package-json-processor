@@ -61,6 +61,22 @@ export default class PackageJsonProcessor {
     return this.psObject.license;
   }
 
+  public set name(name: string) {
+    this.psObject.name = name;
+  }
+
+  set description(description: string) {
+    this.psObject.description = description;
+  }
+
+  set version(version: string) {
+    this.psObject.version = version;
+  }
+
+  set license(license: string) {
+    this.psObject.license = license;
+  }
+
   /**
    * Return the package.json contents as a parsed object
    * @returns any
@@ -95,7 +111,6 @@ export default class PackageJsonProcessor {
     const { packageName, version } = dependency;
 
     if (typeof this.psObject.dependencies === "undefined") {
-      console.log("yup");
       this.psObject.dependencies = {};
     }
 
